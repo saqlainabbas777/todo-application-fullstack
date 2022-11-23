@@ -1,0 +1,24 @@
+### Fetch all tasks
+GET http://localhost:3200/tasks
+Content-Type: application/json
+
+### Create a new task
+POST http://localhost:3200/tasks
+Content-Type: application/json
+
+{
+  "title": "task 2",
+  "date": "2022-11-22T08:24:40.170Z",
+  "description": "this is the second task description",
+  "priority": "normal",
+  "status": "todo"
+}
+
+### update a existing task
+PUT http://localhost:3200/tasks
+Content-Type: application/json
+
+{
+  "id": "b2652b32-f6b0-4f9c-9541-d217592ef472",
+  "status": "todo"
+}
