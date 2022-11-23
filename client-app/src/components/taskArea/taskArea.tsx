@@ -1,4 +1,4 @@
-import React, {FC, ReactElement} from "react";
+import React, {FC, ReactElement, useContext, useEffect} from "react";
 import {Alert, Box, Grid, LinearProgress} from "@mui/material";
 import {format} from "date-fns";
 import {TaskCounter} from "../taskCounter/taskCounter";
@@ -9,8 +9,10 @@ import {ITaskApi} from "./interfaces/ITaskApi";
 import {Status} from "../createTaskFrom/enums/Status";
 import {IUpdateTask} from "./interfaces/IUpdateTask";
 import {countTasks} from "./helpers/countTasks";
+import {TaskStatusChangeContext} from "../../context";
 
 export const TaskArea: FC = (): ReactElement => {
+    const taskUpdatedContext = useContext(TaskStatusChangeContext)
     const {error, isLoading, data, refetch} = useQuery(
         ['tasks'],
         async () => {
@@ -40,6 +42,18 @@ export const TaskArea: FC = (): ReactElement => {
             status: Status.completed
         })
     }
+
+    // use effect
+    useEffect(() => {
+        refetch();
+    }, [taskUpdatedContext.updated])
+
+    useEffect(() => {
+        if (updateTaskMutation.isSuccess) {
+            taskUpdatedContext.toggle()
+        }
+    }, [updateTaskMutation.isSuccess])
+
     return (
         <Grid item md={8} px={4}>
             <Box mb={8} px={4}>
@@ -61,8 +75,10 @@ export const TaskArea: FC = (): ReactElement => {
                     mb={8}
                 >
                     <TaskCounter status={Status.todo} count={data ? countTasks(data, Status.todo) : undefined}/>
-                    <TaskCounter status={Status.inProgress} count={data ? countTasks(data, Status.inProgress) : undefined}/>
-                    <TaskCounter status={Status.completed} count={data ? countTasks(data, Status.completed) : undefined}/>
+                    <TaskCounter status={Status.inProgress}
+                                 count={data ? countTasks(data, Status.inProgress) : undefined}/>
+                    <TaskCounter status={Status.completed}
+                                 count={data ? countTasks(data, Status.completed) : undefined}/>
                 </Grid>
                 <Grid
                     item

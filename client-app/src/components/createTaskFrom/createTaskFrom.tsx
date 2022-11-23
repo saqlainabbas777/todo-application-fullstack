@@ -1,4 +1,4 @@
-import React, {FC, ReactElement, useEffect, useState} from "react";
+import React, {FC, ReactElement, useContext, useEffect, useState} from "react";
 import {Box, Stack, Typography, LinearProgress, Button, Alert, AlertTitle} from "@mui/material";
 import {TaskTitleField} from "./_taskTitleField";
 import {TaskDescriptionField} from "./_taskDescriptionField";
@@ -9,6 +9,7 @@ import {Priority} from "./enums/Priority";
 import {useMutation} from "@tanstack/react-query";
 import {sendApiRequest} from "../../helpers/sendApiRequest";
 import {ICreateTask} from "../taskArea/interfaces/ICreateTask";
+import {TaskStatusChangeContext} from "../../context";
 
 export const CreateTaskFrom: FC = (): ReactElement => {
     // declare states
@@ -18,6 +19,9 @@ export const CreateTaskFrom: FC = (): ReactElement => {
     const [status, setStatus] = useState<string>('todo');
     const [priority, setPriority] = useState<string>('normal');
     const [showSuccess, setShowSuccess] = useState<boolean>(false);
+
+    //context
+    const taskUpdatedContext = useContext(TaskStatusChangeContext);
 
     // create a task mutation
     const createTaskMutation = useMutation((data: ICreateTask) =>
@@ -47,6 +51,7 @@ export const CreateTaskFrom: FC = (): ReactElement => {
     useEffect(() => {
         if (createTaskMutation.isSuccess) {
             setShowSuccess(true);
+            taskUpdatedContext.toggle();
         }
 
         const successTimeout = setTimeout(() => {
