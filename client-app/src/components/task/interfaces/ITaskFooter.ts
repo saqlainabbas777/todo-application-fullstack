@@ -1,6 +1,8 @@
 import React from "react";
 
 export interface ITaskFooter {
-   onStatusChanged?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-   onClick?: (e: React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLAnchorElement>) => void;
+    id: string;
+    status?: string;
+    onStatusChanged?: (e: React.ChangeEvent<HTMLInputElement>, id: string) => void;
+    onClick?: (e: React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLAnchorElement>, id: string) => void;
 }

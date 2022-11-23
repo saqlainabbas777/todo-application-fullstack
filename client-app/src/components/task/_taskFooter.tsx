@@ -2,11 +2,14 @@ import React, {FC, ReactElement} from "react";
 import PropTypes from "prop-types";
 import {Box, Button, FormControlLabel, Switch} from "@mui/material";
 import {ITaskFooter} from "./interfaces/ITaskFooter";
+import {Status} from "../createTaskFrom/enums/Status";
 
 export const TaskFooter: FC<ITaskFooter> = (props): ReactElement => {
     const {
-        onStatusChanged = (e) => console.log(e),
-        onClick = (e) => console.log(e)
+        id,
+        status,
+        onStatusChanged = (e, id) => console.log(e, id),
+        onClick = (e, id) => console.log(e, id)
     } = props;
     return (
         <Box
@@ -18,7 +21,8 @@ export const TaskFooter: FC<ITaskFooter> = (props): ReactElement => {
             <FormControlLabel
                 label={'In Progress'}
                 control={<Switch
-                    onChange={(e) => onStatusChanged(e)}
+                    defaultChecked={status === Status.inProgress}
+                    onChange={(e) => onStatusChanged(e, id)}
                     color={'warning'}
                 />}
             />
@@ -30,12 +34,14 @@ export const TaskFooter: FC<ITaskFooter> = (props): ReactElement => {
                 sx={{
                     color: '#ffffff'
                 }}
-                onClick={(e) => onClick(e)}
+                onClick={(e) => onClick(e, id)}
             >Mark Complete</Button>
         </Box>
     );
 }
 TaskFooter.propTypes = {
+    id: PropTypes.string.isRequired,
+    status: PropTypes.string,
     onStatusChanged: PropTypes.func,
     onClick: PropTypes.func
 }
